@@ -86,7 +86,7 @@
                         appListItem.appendChild(img);
 
                         const appName1 = document.createElement('span');
-                        appName1.textContent = "&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;";
+                        appName1.innerHTML = "&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;";
                         appListItem.appendChild(appName1);
 
                         const appName = document.createElement('span');
@@ -94,7 +94,7 @@
                         appListItem.appendChild(appName);
 
                         const appName11 = document.createElement('span');
-                        appName11.textContent = "&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;";
+                        appName11.innerHTML = "&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;";
                         appListItem.appendChild(appName11);
 
                     const releaseDate = new Date(appInfo.currentVersionReleaseDate);
