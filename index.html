@@ -120,7 +120,7 @@
                         appListItem.appendChild(currentVersionReleaseDate);
                         
                         const appName121 = document.createElement('span');
-                        appName121.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                        appName121.innerHTML = "&nbsp;&nbsp;&nbsp";
                         appListItem.appendChild(appName121);
                         
                         const appDetails = document.createElement('span');
@@ -128,7 +128,8 @@
                         appListItem.appendChild(appDetails);
                         
                         appListItem.addEventListener('click', onItemClick);
-                        appListElement.appendChild(appListItem);
+                        // appListElement.appendChild(appListItem);
+                        appListElement.insertBefore(appListItem, appListElement.firstChild);
                         })
                         .catch(error => {
                             const errorListItem = document.createElement('li');
