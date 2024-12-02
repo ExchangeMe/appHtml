@@ -3,6 +3,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iTunes App Lookup</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -53,6 +54,7 @@
     <ul id="appList"></ul>
     <button class="floating-button" onclick="handleButtonClick()">+</button>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
     function handleButtonClick() {
     // Add your logic for the button click here    //
@@ -68,20 +70,30 @@
         const isMobile = /iPhone/i.test(navigator.userAgent);
         
         if (isMobile) {
-            const message = '请选择一个选项：\n1. AppStore 1\n2. 七麦 2\n3. Cancel';
-            const choice = window.prompt(message);
-            if (choice === '1') {
-                // 用户选择了选项1，执行相应操作
-                window.open(`https://apps.apple.com/cn/app/id${trackId}`)
-            } else if (choice === '2') {
-                // 用户选择了选项2，执行相应操作
-                if (trackId) {
-                    window.open(`https://www.qimai.cn/app/baseinfo/appid/${trackId}/country/cn`)
-                        // window.open = ; // Redirect to the app details page
+            Swal.fire({
+                    title: 'Custom Confirm Dialog',
+                    text: '您确定要执行此操作吗？',
+                    icon: 'question',
+                    showCancelButton: true,
+                    showCloseButton: true,
+                    confirmButtonText: 'AppStore',
+                    cancelButtonText: '七麦'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // 用户点击了自定义确定按钮
+                        window.open(`https://apps.apple.com/cn/app/id${trackId}`)
+
+                        
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                        // 用户点击了自定义取消按钮
+                        if (trackId) {
+                            window.open(`https://www.qimai.cn/app/baseinfo/appid/${trackId}/country/cn`)
+                                // window.open = ; // Redirect to the app details page
+                            }
+                      
                     }
-            }else {
-                // 用户取消或输入无效选项，执行其他操作或不执行任何操作
-            }
+                });
+         
             
         }else{
             if (trackId) {
