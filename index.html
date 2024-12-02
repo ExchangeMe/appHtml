@@ -129,11 +129,26 @@
                         
                         appListItem.addEventListener('click', onItemClick);
                         // appListElement.appendChild(appListItem);
+                        localStorage.setItem(appId, appInfo.trackName);
+                        localStorage.setItem(`tm${appId}`,`${appInfo.currentVersionReleaseDate.split('T')[0]}`)
+                        
                         appListElement.insertBefore(appListItem, appListElement.firstChild);
                         })
                         .catch(error => {
                             const errorListItem = document.createElement('li');
-                            errorListItem.textContent = `off line: ${appId}`;
+                            const cachedData = localStorage.getItem(appId);
+                            const cachedData1 = localStorage.getItem(`tm${appId}`);
+                            errorListItem.textContent = `off line: ${appId}  \t   ${cachedData}  \t  ${cachedData1}`;
+                            if (cachedData1 === null) {
+                                errorListItem.textContent = `off line: ${appId}  \t  ${cachedData}`;
+                            }
+                            if (cachedData === null) {
+                                errorListItem.textContent = `off line: ${appId}  \t  ${cachedData1}`;
+                            }
+                            if (cachedData === null && cachedData1 === null) {
+                                errorListItem.textContent = `off line: ${appId}`;
+                            }
+                           
                             errorListItem.classList.add('error');
                             errorListItem.setAttribute('data-trackid', appId); // Set data attribute for track ID
 
