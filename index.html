@@ -63,16 +63,31 @@
         function onItemClick(event) {
             // Add your click event handling logic here
             // console.log('Item clicked:', event.target.appInfo.trackId);
-                        const trackId = event.currentTarget.getAttribute('data-trackid');
+        const trackId = event.currentTarget.getAttribute('data-trackid');
 
-        if (trackId) {
-            window.open(`https://www.qimai.cn/app/baseinfo/appid/${trackId}/country/cn`)
-                // window.open = ; // Redirect to the app details page
-            }
         const isMobile = /iPhone/i.test(navigator.userAgent);
         
         if (isMobile) {
-            window.open(`https://apps.apple.com/cn/app/id${trackId}`)
+            const message = '请选择一个选项：\n1. AppStore 1\n2. 七麦 2\n3. Cancel';
+            const choice = window.prompt(message);
+            if (choice === '1') {
+                // 用户选择了选项1，执行相应操作
+                window.open(`https://apps.apple.com/cn/app/id${trackId}`)
+            } else if (choice === '2') {
+                // 用户选择了选项2，执行相应操作
+                if (trackId) {
+                    window.open(`https://www.qimai.cn/app/baseinfo/appid/${trackId}/country/cn`)
+                        // window.open = ; // Redirect to the app details page
+                    }
+            }else {
+                // 用户取消或输入无效选项，执行其他操作或不执行任何操作
+            }
+            
+        }else{
+            if (trackId) {
+                window.open(`https://www.qimai.cn/app/baseinfo/appid/${trackId}/country/cn`)
+                    // window.open = ; // Redirect to the app details page
+                }
         }
                         
         console.log('Item clicked11:', trackId);
