@@ -69,7 +69,13 @@
             window.open(`https://www.qimai.cn/app/baseinfo/appid/${trackId}/country/cn`)
                 // window.open = ; // Redirect to the app details page
             }
-                        console.log('Item clicked11:', trackId);
+        const isMobile = /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        if (isMobile) {
+            window.open(`https://apps.apple.com/cn/app/id${trackId}`)
+        }
+                        
+        console.log('Item clicked11:', trackId);
 
         }
         fetch('https://6736b650aafa2ef22231484b.mockapi.io/apps')
