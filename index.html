@@ -225,7 +225,7 @@
                             var params = 'appid=${appId}&country=cn';
                             var analysis = getAnalysis(url, params);
 <!--                            console.log(analysis);-->
-                            fetch(`https://api.qimai.cn/app/appinfo?analysis=${analysis}&appid=6738429015&country=cn`)
+                            fetch(`https://api.qimai.cn/app/appinfo?analysis=${analysis}&appid=${appId}&country=cn`)
                             .then(response => response.json())
                             .then(qmappData => {
                                 console.log(qmappData);
