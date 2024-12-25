@@ -228,10 +228,17 @@
                             fetch(`https://api.qimai.cn/app/appinfo?analysis=${analysis}&appid=${appId}&country=cn`)
                             .then(response => response.json())
                             .then(qmappData => {
-                                console.log(qmappData);
+                                if (qmappData.code == 10000) {
+                                    console.log(`ok`);
+                                    console.log(qmappData.appInfo);
+                                }else{
+                                    console.log(qmappData);
+                                }
                             })
+                            .catch(error => {
+                                console.log(`请安装下插件：`+`https://chromewebstore.google.com/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino`)
+                            });
                             // end模拟qimai
-                            
                             
                             const errorListItem = document.createElement('li');
                             const cachedData = localStorage.getItem(appId);
