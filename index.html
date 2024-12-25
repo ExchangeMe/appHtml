@@ -170,10 +170,8 @@
                             const errorListItem = document.createElement('li');
                             const cachedData = localStorage.getItem(appId);
                             const cachedData1 = localStorage.getItem(`tm${appId}`);
-                            
-                            const _offtime = localStorage.getItem(`offtm${appId}`);
-                            
-                            if (_offtime === null) {
+                                                        
+                            if (localStorage.getItem(`offtm${appId}`) === null) {
                                 const now = new Date();
                                 const year = now.getFullYear();
                                 const month = String(now.getMonth() + 1).padStart(2, '0'); // 月份从 0 开始
@@ -181,13 +179,14 @@
                                 const dateString = `${year}-${month}-${day}`;
                                 localStorage.setItem(`offtm${appId}`, dateString);
                             }
-                            
-                            errorListItem.textContent = `已下架: ${appId}  \t   ${cachedData}  \t  下架时间：${cachedData1}  \t  ${_offtime}`;
+                            const _offtime = localStorage.getItem(`offtm${appId}`);
+
+                            errorListItem.textContent = `已下架: ${appId}  \t   ${cachedData}  \t  上架时间：${cachedData1}  \t  下架时间：${_offtime}`;
                             if (cachedData1 === null) {
                                 errorListItem.textContent = `已下架: ${appId}  \t  ${cachedData}  \t  下架时间：${_offtime}`;
                             }
                             if (cachedData === null) {
-                                errorListItem.textContent = `已下架: ${appId}  \t  ${cachedData1}  \t  下架时间：${_offtime}`;
+                                errorListItem.textContent = `已下架: ${appId}  \t  上架时间：${cachedData1}  \t  下架时间：${_offtime}`;
                             }
                             if (cachedData === null && cachedData1 === null) {
                                 errorListItem.textContent = `已下架: ${appId}  \t  下架时间：${_offtime}`;
