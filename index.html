@@ -51,12 +51,15 @@
 </head>
 
 <body>
-    <h1>iTunes App Lookup</h1>
+    <h1 id="dynamic-title">iTunes App Lookup</h1>
     <ul id="appList"></ul>
     <button class="floating-button" onclick="handleButtonClick()">+</button>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        const titleElement = document.getElementById('dynamic-title');
+        var c1 = 0
+        var c2 = 0
     function handleButtonClick() {
     // Add your logic for the button click here    //
     window.open(`https://mockapi.io/projects/6736b650aafa2ef22231484c`)
@@ -114,6 +117,10 @@
                     fetch(`http://itunes.apple.com/lookup?id=${appId}&date=${Date.now()}`)
                         .then(response => response.json())
                         .then(appData => {
+                            
+                            c1 = c1 + 1;
+                            titleElement.textContent = `iTunes App Lookup : 在线: ${c1}  下架: ${c2}`;
+                            
                            const appInfo = appData.results[0];
                         const appListItem = document.createElement('li');
                         appListItem.classList.add('cell'); // Add cell class
@@ -170,7 +177,8 @@
                         appListElement.insertBefore(appListItem, appListElement.firstChild);
                         })
                         .catch(error => {
-                            
+                            c2 = c2 + 1;
+                            titleElement.textContent = `iTunes App Lookup : 在线: ${c1}  下架: ${c2}`;
                             
                             // 模拟qimai
                             function getAnalysis(url, params) {
