@@ -118,9 +118,6 @@
                         .then(response => response.json())
                         .then(appData => {
                             
-                            c1 = c1 + 1;
-                            titleElement.textContent = `iTunes App Lookup : 在线: ${c1}  下架: ${c2}`;
-                            
                            const appInfo = appData.results[0];
                         const appListItem = document.createElement('li');
                         appListItem.classList.add('cell'); // Add cell class
@@ -178,6 +175,7 @@
                         })
                         .catch(error => {
                             c2 = c2 + 1;
+                            c1 = data.length - c2;
                             titleElement.textContent = `iTunes App Lookup : 在线: ${c1}  下架: ${c2}`;
                             
                             // 模拟qimai
