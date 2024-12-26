@@ -12,6 +12,7 @@
         .rounded-image {
             border: 0.5px solid #000; /* 设置边框为0.5px实线 */
             border-radius: 13px; /* 设置圆角为16px */
+            width: 60px;
         }
         ul {
             list-style-type: none;
@@ -104,6 +105,8 @@
         console.log('Item clicked11:', trackId);
 
         }
+        var timeout = 0
+        
         fetch('https://6736b650aafa2ef22231484b.mockapi.io/apps')
             .then(response => response.json())
             .then(data => {
@@ -224,52 +227,172 @@
                             var url = 'https://api.qimai.cn/app/appinfo';
                             var params = 'appid=${appId}&country=cn';
                             var analysis = getAnalysis(url, params);
-<!--                            console.log(analysis);-->
-                            fetch(`https://api.qimai.cn/app/appinfo?analysis=${analysis}&appid=${appId}&country=cn`)
-                            .then(response => response.json())
-                            .then(qmappData => {
-                                if (qmappData.code == 10000) {
-                                    console.log(`ok`);
-                                    console.log(qmappData.appInfo);
-                                }else{
-                                    console.log(qmappData);
-                                }
-                            })
-                            .catch(error => {
-                                console.log(`请安装下插件：`+`https://chromewebstore.google.com/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino`)
-                            });
-                            // end模拟qimai
                             
-                            const errorListItem = document.createElement('li');
-                            const cachedData = localStorage.getItem(appId);
-                            const cachedData1 = localStorage.getItem(`tm${appId}`);
-                                                        
-                            if (localStorage.getItem(`offtm${appId}`) === null) {
-                                const now = new Date();
-                                const year = now.getFullYear();
-                                const month = String(now.getMonth() + 1).padStart(2, '0'); // 月份从 0 开始
-                                const day = String(now.getDate()).padStart(2, '0');
-                                const dateString = `${year}-${month}-${day}`;
-                                localStorage.setItem(`offtm${appId}`, dateString);
-                            }
-                            const _offtime = localStorage.getItem(`offtm${appId}`);
+                            const qimaiOff = localStorage.getItem(`qimai_${appId}`);
+                            if (qimaiOff === null) {
+                                const randomNumber = Math.random() * 4;
+                                timeout = timeout+randomNumber;
+                                setTimeout(() => {
+                                    fetch(`https://api.qimai.cn/app/appinfo?analysis=${analysis}&appid=${appId}&country=cn`)
+                                    .then(response => response.json())
+                                    .then(qmappData => {
+                                        if (qmappData.code == 10000) {
+                                            console.log(`ok`);
+                                            console.log(qmappData.appInfo);
+                                            if (qmappData.appInfo.online == false) {
+                                                localStorage.setItem(`qimai_${appId}`, JSON.stringify(qmappData.appInfo));
+                                                const errorListItem = document.createElement('li');
+                                                
+                                                const img = document.createElement('img');
+                                                img.src = qmappData.appInfo.icon;
+                                                errorListItem.appendChild(img);
+                                                img.classList.add('rounded-image');
+                                                
+                                                const appName1 = document.createElement('span');
+                                                appName1.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                                                errorListItem.appendChild(appName1);
+                                                
+                                                const appName = document.createElement('span');
+                                                appName.textContent = qmappData.appInfo.appname;
+                                                errorListItem.appendChild(appName);
+                                                
+                                                const cxx = document.createElement('span');
+                                                cxx.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                                                errorListItem.appendChild(cxx);
+                                                
+                                                const ivv = document.createElement('span');
+                                                ivv.textContent = qmappData.appInfo.offline;
+                                                errorListItem.appendChild(ivv);
+                                                
+                                                const cxx1 = document.createElement('span');
+                                                cxx1.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                                                errorListItem.appendChild(cxx1);
+                                                
+                                                const ivv1 = document.createElement('span');
+                                                ivv1.textContent = qmappData.appInfo.version;
+                                                errorListItem.appendChild(ivv1);
+                                                
+                                                
+                                                errorListItem.classList.add('error');
+                                                errorListItem.setAttribute('data-trackid', appId); // Set data attribute for track ID
+                                                
+                                                errorListItem.addEventListener('click', onItemClick);
+                                                appListElement.appendChild(errorListItem);
+                                                
+                                            }
+                                        }else{
+                                            console.log(qmappData);
+                                            const errorListItem = document.createElement('li');
+                                            const cachedData = localStorage.getItem(appId);
+                                            const cachedData1 = localStorage.getItem(`tm${appId}`);
+                                            
+                                            if (localStorage.getItem(`offtm${appId}`) === null) {
+                                                const now = new Date();
+                                                const year = now.getFullYear();
+                                                const month = String(now.getMonth() + 1).padStart(2, '0'); // 月份从 0 开始
+                                                const day = String(now.getDate()).padStart(2, '0');
+                                                const dateString = `${year}-${month}-${day}`;
+                                                localStorage.setItem(`offtm${appId}`, dateString);
+                                            }
+                                            const _offtime = localStorage.getItem(`offtm${appId}`);
+                                            
+                                            errorListItem.textContent = `已下架: ${appId}  \t   ${cachedData}  \t  上架时间：${cachedData1}  \t  下架时间：${_offtime}`;
+                                            if (cachedData1 === null) {
+                                                errorListItem.textContent = `已下架: ${appId}  \t  ${cachedData}  \t  下架时间：${_offtime}`;
+                                            }
+                                            if (cachedData === null) {
+                                                errorListItem.textContent = `已下架: ${appId}  \t  上架时间：${cachedData1}  \t  下架时间：${_offtime}`;
+                                            }
+                                            if (cachedData === null && cachedData1 === null) {
+                                                errorListItem.textContent = `已下架: ${appId}  \t  下架时间：${_offtime}`;
+                                            }
+                                            
+                                            errorListItem.classList.add('error');
+                                            errorListItem.setAttribute('data-trackid', appId); // Set data attribute for track ID
+                                            
+                                            errorListItem.addEventListener('click', onItemClick);
+                                            appListElement.appendChild(errorListItem);
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.log(`请安装下插件：`+`https://chromewebstore.google.com/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino`)
+                                        const errorListItem = document.createElement('li');
+                                        const cachedData = localStorage.getItem(appId);
+                                        const cachedData1 = localStorage.getItem(`tm${appId}`);
+                                        
+                                        if (localStorage.getItem(`offtm${appId}`) === null) {
+                                            const now = new Date();
+                                            const year = now.getFullYear();
+                                            const month = String(now.getMonth() + 1).padStart(2, '0'); // 月份从 0 开始
+                                            const day = String(now.getDate()).padStart(2, '0');
+                                            const dateString = `${year}-${month}-${day}`;
+                                            localStorage.setItem(`offtm${appId}`, dateString);
+                                        }
+                                        const _offtime = localStorage.getItem(`offtm${appId}`);
+                                        
+                                        errorListItem.textContent = `已下架: ${appId}  \t   ${cachedData}  \t  上架时间：${cachedData1}  \t  下架时间：${_offtime}`;
+                                        if (cachedData1 === null) {
+                                            errorListItem.textContent = `已下架: ${appId}  \t  ${cachedData}  \t  下架时间：${_offtime}`;
+                                        }
+                                        if (cachedData === null) {
+                                            errorListItem.textContent = `已下架: ${appId}  \t  上架时间：${cachedData1}  \t  下架时间：${_offtime}`;
+                                        }
+                                        if (cachedData === null && cachedData1 === null) {
+                                            errorListItem.textContent = `已下架: ${appId}  \t  下架时间：${_offtime}`;
+                                        }
+                                        
+                                        errorListItem.classList.add('error');
+                                        errorListItem.setAttribute('data-trackid', appId); // Set data attribute for track ID
+                                        
+                                        errorListItem.addEventListener('click', onItemClick);
+                                        appListElement.appendChild(errorListItem);
+                                    });
+                                    
+                                }, 1000+timeout*1000); // 3秒后显示
 
-                            errorListItem.textContent = `已下架: ${appId}  \t   ${cachedData}  \t  上架时间：${cachedData1}  \t  下架时间：${_offtime}`;
-                            if (cachedData1 === null) {
-                                errorListItem.textContent = `已下架: ${appId}  \t  ${cachedData}  \t  下架时间：${_offtime}`;
-                            }
-                            if (cachedData === null) {
-                                errorListItem.textContent = `已下架: ${appId}  \t  上架时间：${cachedData1}  \t  下架时间：${_offtime}`;
-                            }
-                            if (cachedData === null && cachedData1 === null) {
-                                errorListItem.textContent = `已下架: ${appId}  \t  下架时间：${_offtime}`;
-                            }
-                           
-                            errorListItem.classList.add('error');
-                            errorListItem.setAttribute('data-trackid', appId); // Set data attribute for track ID
+                            }else{
+                                const errorListItem = document.createElement('li');
+                                errorListItem.classList.add('cell'); // Add cell class
+                                const storedAppInfo = JSON.parse(qimaiOff);
 
-                            errorListItem.addEventListener('click', onItemClick);
-                            appListElement.appendChild(errorListItem);
+                               const img = document.createElement('img');
+                               img.src = storedAppInfo.icon;
+                               errorListItem.appendChild(img);
+                               img.classList.add('rounded-image');
+                               console.log(qimaiOff.icon)
+                               
+                               const appName1 = document.createElement('span');
+                               appName1.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                               errorListItem.appendChild(appName1);
+
+                               const appName = document.createElement('span');
+                               appName.textContent = storedAppInfo.appname;
+                               errorListItem.appendChild(appName);
+                               
+                               const cxx = document.createElement('span');
+                               cxx.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                               errorListItem.appendChild(cxx);
+                               
+                               const ivv = document.createElement('span');
+                               ivv.textContent = storedAppInfo.offline;
+                               errorListItem.appendChild(ivv);
+                               
+                               const cxx1 = document.createElement('span');
+                               cxx1.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                               errorListItem.appendChild(cxx1);
+                               
+                               const ivv1 = document.createElement('span');
+                               ivv1.textContent = storedAppInfo.version;
+                               errorListItem.appendChild(ivv1);
+                               
+                               
+                                errorListItem.classList.add('error');
+                                errorListItem.setAttribute('data-trackid', appId); // Set data attribute for track ID
+
+                                errorListItem.addEventListener('click', onItemClick);
+                                appListElement.appendChild(errorListItem);
+                            }
+                            // end模拟qimai
                         });
                 });
             })
