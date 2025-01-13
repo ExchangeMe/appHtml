@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://6736b650aafa2ef22231484b.mockapi.io https://apps.apple.com http://itunes.apple.com https://is1-ssl.mzstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com https://api.qimai.cn https://www.qimai.cn; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://api.qimai.cn/app/appinfo https://6736b650aafa2ef22231484b.mockapi.io https://apps.apple.com http://itunes.apple.com https://is1-ssl.mzstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com https://api.qimai.cn https://www.qimai.cn https://api.qimai.cn https://*.qimai.cn; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -47,16 +47,73 @@
         cursor: pointer;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
+        .input-container {
+            display: flex;
+            align-items: center;
+            width: 300px;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .input-container input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 0;
+            outline: none;
+        }
+        
+        .input-container button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 0 10px 10px 0;
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
     <h1 id="dynamic-title">iTunes App Lookup</h1>
+    <div class="input-container">
+           <input type="text" id="textInput" placeholder="Enter appId">
+           <button id="submitButton" onclick="getText()">Search</button>
+       </div>
     <ul id="appList"></ul>
     <button class="floating-button" onclick="handleButtonClick()">+</button>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        
+        function getText() {
+            var inputText = document.getElementById("textInput").value;
+            const isMobile = /iPhone/i.test(navigator.userAgent);
+            if (isMobile) {
+                window.open(`https://apps.apple.com/cn/app/id${inputText}`)
+            }else{
+                Swal.fire({
+                        title: 'You want',
+                        icon: 'info',
+                        showCancelButton: true,
+                        showCloseButton: true,
+                        confirmButtonText: 'AppStore',
+                        cancelButtonText: '七麦'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // 用户点击了自定义确定按钮
+                            window.open(`https://apps.apple.com/cn/app/id${inputText}`)
+                            
+                        } else if (result.dismiss === Swal.DismissReason.cancel) {
+                            window.open(`https://www.qimai.cn/app/baseinfo/appid/${inputText}/country/cn`)
+                        }
+                    });
+            }
+            // You can perform further actions with the inputText here
+        }
+        
         const titleElement = document.getElementById('dynamic-title');
         var c1 = 0
         var c2 = 0
@@ -239,7 +296,7 @@
                                 const randomNumber = Math.random() * 4;
                                 timeout = timeout+randomNumber;
                                 setTimeout(() => {
-                                    fetch(`https://api.qimai.cn/app/appinfo?analysis=${analysis}&appid=${appId}&country=cn`)
+                                    fetch(`https://api.qimai.cn/app/appinfo?analysis=${analysis}&appid=${appId}&country=cn`,{ heard: {'Access-Control-Allow-Origin':'*'} })
                                     .then(response => response.json())
                                     .then(qmappData => {
                                         if (qmappData.code == 10000) {
